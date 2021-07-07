@@ -115,7 +115,7 @@ bot.on("message", message => {
 			})();
 			
 			if (method === "help") {
-				text += "*Queue Managing*";
+				let text = "*Queue Managing*";
 				text += "\nUsage: `/queue [method] [argument]`";
 				text += "\n\nAvailable Method:";
 				text += "\n  remove  - Remove a song in a queue";
