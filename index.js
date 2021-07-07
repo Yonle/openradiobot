@@ -93,7 +93,7 @@ bot.on("message", message => {
 				text += `\nLoop Type: \`${radios.get(message.chat.id).metadata.loopType}\``;
 				text += `\nCreated Since: \`${ms(Date.now() - radios.get(message.chat.id).metadata.starttime)}\``;
 				if (radios.get(message.chat.id).metadata.curSong) text += `\nNow Playing: ${radios.get(message.chat.id).metadata.curSong.title}`;
-				text += `\nLive on: [http://localhost:3000/${message.chat.id}](http://localhost:3000/${message.chat.id})`;
+				text += `\nLive on: [${process.env.SERVER_HOST||"http://localhost:3000"}/${message.chat.id}](http://localhost:3000/${message.chat.id})`;
 				text += `\n\nTo check song queue, Type /queue`;
 				message.reply(text);
 			})();

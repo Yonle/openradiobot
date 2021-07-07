@@ -6,6 +6,9 @@ Create `.env` files, And fill:
 ```
 # Fill your bot token here....
 BOT_TOKEN=
+
+# SERVER_HOST is used for /manage command. Showing where the Lives located.
+SERVER_HOST=http://localhost:3000
 ```
 
 ## Community
