@@ -93,6 +93,8 @@ bot.on("message", message => {
 						}
 						message.reply(`▶️Now playing:  ${client.metadata.curSong.title}`)
 					});
+
+					stream.on('error', err => message.reply(err.toString()));
 				}
 			})
 			message.reply("✔️Radio Created");
