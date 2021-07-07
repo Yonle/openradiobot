@@ -1,0 +1,19 @@
+{
+  "name": "openradiobot",
+  "version": "0.0.0",
+  "description": "A bot that uses openradio and ytdl-core to create a radio.",
+  "main": "index.js",
+  "author": "Yonle",
+  "license": "MIT",
+  "scripts": {
+  	"start": "node index.js"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "openradio": "^1.1.30-c",
+    "slimbot": "^5.1.0",
+    "ytdl-core": "^4.8.3",
+    "ytpl": "^2.2.1",
+    "ytsr": "^3.5.0"
+  }
+}
