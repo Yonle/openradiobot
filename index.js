@@ -75,8 +75,8 @@ bot.on("message", message => {
 					let client = radios.get(message.chat.id);
 					if (!client) return;
 					radios.get(message.chat.id).queue = radios.get(message.chat.id).queue.filter(song => song);
-					if (client.metadata.loopType == "queue") client.queue.push(client.metadata.curSong);
-					if (client.metadata.loopType == "single") client.queue.unshift(client.metadata.curSong);
+					if (client.metadata.loopType == "queue" && typeof(client.metadata.curSong) === "object") client.queue.push(client.metadata.curSong);
+					if (client.metadata.loopType == "single" && typeof(client.metadata.curSong) === "object") client.queue.unshift(client.metadata.curSong);
 					let nextSong = radios.get(message.chat.id).queue.shift();
 					client.metadata.curSong = null;
 					if (!nextSong) return;
