@@ -56,6 +56,7 @@ bot.on("message", message => {
 				play: function () {
 					let client = radios.get(message.chat.id);
 					if (!client) return;
+					radios.get(message.chat.id).queue = radios.get(message.chat.id).queue.filter(song => song);
 					if (client.metadata.loopType == "queue") client.queue.push(client.metadata.curSong);
 					if (client.metadata.loopType == "single") client.queue.unshift(client.metadata.curSong);
 					let nextSong = radios.get(message.chat.id).queue.shift();
@@ -93,6 +94,7 @@ bot.on("message", message => {
 				text += `\nLoop Type: \`${radios.get(message.chat.id).metadata.loopType}\``;
 				text += `\nCreated Since: \`${ms(Date.now() - radios.get(message.chat.id).metadata.starttime)}\``;
 				if (radios.get(message.chat.id).metadata.curSong) text += `\nNow Playing: ${radios.get(message.chat.id).metadata.curSong.title}`;
+				text += `\nAutoplay Enabled?: \`${radios.get(message.chat.id).metadata.autoplay ? "Yes" : "No"}\``;
 				text += `\nLive on: [${process.env.SERVER_HOST||"http://localhost:3000"}/${message.chat.id}](http://localhost:3000/${message.chat.id})`;
 				text += `\n\nTo check song queue, Type /queue`;
 				message.reply(text);
@@ -101,14 +103,48 @@ bot.on("message", message => {
 		case "queue":
 			if (!radios.has(message.chat.id)) return message.reply("You didn't created radio yet. Did you mean /new ?");
 			if (!radios.get(message.chat.id).queue.length) return message.reply("🏜️Nothing is in queue....");
-			(() => {
+			let method = message.text.split(" ").slice(1)[0];
+			if (!method) return (() => {
 				let text = "*Radio Queue*";
 				radios.get(message.chat.id).queue.forEach((song, songNum) => {
 					songNum++;
 					text += `\n${songNum}. [${song.title}](https://youtu.be/${song.id})`;
 				});
+				text += "\n\nYou may also manage these queue. For more information, Do `/queue help`";
 				message.reply(text);
 			})();
+			
+			if (method === "help") {
+				text += "*Queue Managing*";
+				text += "\nUsage: `/queue [method] [argument]`";
+				text += "\n\nAvailable Method:";
+				text += "\n  remove  - Remove a song in a queue";
+				text += "\n  move    - Move a song in a queue";
+				text += "\n  shuffle - Sort queue into random order";
+				text += "\n  random  - Alias of `shuffle`";
+				message.reply(text);
+			} else if (method === "remove") {
+				let args = message.text.split(" ").slice(2)[0];
+				if (!args) return message.reply("Usage: `/queue remove [Order number of song in /queue]`");
+				if (!radios.get(message.chat.id).queue[Number(args)]) return message.reply("No song was found in Queue Order number " + args);
+				delete radios.get(message.chat.id).queue[Number(args)];
+				// Re-create. Ignore the undefined ones
+				radios.get(message.chat.id).queue = radios.get(message.chat.id).queue.filter(song => song);
+				message.reply(`✔️Song number ${args} has been removed.`);
+			} else if (method === "move") {
+				let args = message.text.split(" ").slice(2)[0];
+				let to = message.text.split(" ").slice(3)[0];
+				if (!args || !to) return message.reply("Usage: `/queue move [Order number] [To Order number]`");
+				if (!radios.get(message.chat.id).queue[Number(args)] || !radios.get(message.chat.id).queue[Number(to)]) return message.reply("Song not found or invalid value.");
+				let fromOrder = radios.get(message.chat.id).queue[Number(args)];
+				let toOrder = radios.get(message.chat.id).queue[Number(to)];
+				radios.get(message.chat.id).queue[Number(args)] = toOrder;
+				radios.get(message.chat.id).queue[Number(to)] = fromOrder;
+				message.reply(`✔️${fromOrder.title} order moved to ${toOrder.title} order.`);
+			} else if (method === "shuffle" || method === "random") {
+				radios.get(message.chat.id).queue.sort(() => 0.5 - Math.random());
+				message.reply("✔️Queue order has been sorted randomly.");
+			}
 			break;
 		case "play":
 			if (!radios.has(message.chat.id)) return message.reply("You didn't created radio yet. Did you mean /new ?");
@@ -192,7 +228,7 @@ bot.on("message", message => {
 				text += "\n/resume   - Resume a player";
 				text += "\n/skip     - Skip current song";
 				text += "\n/stop     - Stop player";
-				text += "\n/queue    - Manage queue";
+				text += "\n/queue    - See & Manage queue list.";
 				text += "\n/autoplay - Auto play next song from youtube **Related Videos** query.";
 				text += "\n/loop     - Loop queue";
 			

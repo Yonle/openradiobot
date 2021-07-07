@@ -1,6 +1,12 @@
 ## OpenradioBot
 A telegram bot that uses [openradio](https://github.com/Yonle/openradio) and [ytdl-core](https://npmjs.com/ytdl-core) to create a radio.
 
+## Requirement
+- NodeJS v10+
+- FFmpeg installed (Or install `ffmpeg-static` with `npm`)
+- Better network connection
+- A big memory (Including CPU, RAM) should be enough.a
+
 ## Configuration
 Create `.env` files, And fill:
 ```
