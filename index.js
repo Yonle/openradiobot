@@ -34,7 +34,25 @@ server.on('request', (req, res) => {
 });
 
 bot.on("message", message => {
-	message.reply = (text) => bot.sendMessage(message.chat.id, text, { parse_mode: "Markdown" });
+	message.reply = async (text) => {
+		if (!text || typeof text != "string") return Promise.resolve();
+		if (text.length > 4096) {
+			try {
+				await bot.sendMessage(message.chat.id, text.slice(0, 4096), { parse_mode: "Markdown" });
+				return await message.reply(text.slice(4096));
+			} catch (error) {
+				message.reply("An error occured: " + error.toString());
+			}
+		} else {
+			if (!text.length) return Promise.resolve();
+			try {
+				await bot.sendMessage(message.chat.id, text, { parse_mode: "Markdown" });
+				return Promise.resolve();
+			} catch (error) {
+				message.reply("An error occured: " + error.toString());
+			}
+		}
+	};
 	message.chat.id = message.chat.id.toString();
 	if (!message.text.startsWith("/")) return;
 	switch (message.text.split(" ")[0].slice(1)) {
@@ -106,11 +124,11 @@ bot.on("message", message => {
 			let method = message.text.split(" ").slice(1)[0];
 			if (!method) return (() => {
 				let text = "*Radio Queue*";
-				radios.get(message.chat.id).queue.forEach((song, songNum) => {
+				radios.get(message.chat.id).queue.slice(0, 20).forEach((song, songNum) => {
 					songNum++;
 					text += `\n${songNum}. [${song.title}](https://youtu.be/${song.id})`;
 				});
-				text += "\n\nYou may also manage these queue. For more information, Do `/queue help`";
+				text += "\n\n⚠️Some song is hidden due to a lot of request value. We'll improve this soon.\n\nYou may also manage these queue. For more information, Do `/queue help`";
 				message.reply(text);
 			})();
 			
@@ -152,22 +170,41 @@ bot.on("message", message => {
 			if (!str.length) return message.reply("Usage: `/play [Song name]`");
 			message.reply(`Searching \`${str}\`...`);
 			bot.sendChatAction(message.chat.id, 'typing');
-			ytsr(str, { limit: 1 }).then(res => {
-				bot.sendChatAction(message.chat.id, 'typing');
-				res.items = res.items.filter(video => video.type == "video");
-				if (!res.items.length) return message.reply("🙅No Result.");
-				if (!radios.has(message.chat.id)) return;
-				if (!radios.get(message.chat.id).queue.length && !radios.get(message.chat.id).metadata.curSong) {
-					radios.get(message.chat.id).queue.push(res.items[0]);
-					message.reply("Preparing to play...");
-					radios.get(message.chat.id).play();
-				} else {
-					radios.get(message.chat.id).queue.push(res.items[0]);
-					message.reply(`✔️ [${res.items[0].title}](https://youtu.be/${res.items[0].id}) has been added to queue.`)
-				}
-			}).catch(err => {
-				message.reply(`An error occured: ${err.toString()}`);
-			});
+			if (str.toLowerCase().includes("youtube.com/playlist?list=")) {
+				ytpl(str, { limit: Infinity, page: Infinity }).then(res => {
+					if (!res.items.length) return message.reply("🙅No Result.");
+					if (!radios.has(message.chat.id)) return;
+					message.reply(`✔️${res.items.length} Song has been added to queue`);
+					if (!radios.get(message.chat.id).queue.length && !radios.get(message.chat.id).metadata.curSong) {
+						radios.get(message.chat.id).queue.push(res.items);
+						radios.get(message.chat.id).queue = radios.get(message.chat.id).queue.flat(Infinity);
+						message.reply("Preparing to play...");
+						bot.sendChatAction(message.chat.id, 'typing');
+						radios.get(message.chat.id).play();
+					} else {
+						radios.get(message.chat.id).queue.push(res.items);
+						radios.get(message.chat.id).queue = radios.get(message.chat.id).queue.flat(Infinity);
+					}
+				});
+			} else {
+				ytsr(str, { limit: 1 }).then(res => {
+					bot.sendChatAction(message.chat.id, 'typing');
+					res.items = res.items.filter(video => video.type == "video");
+					if (!res.items.length) return message.reply("🙅No Result.");
+					if (!radios.has(message.chat.id)) return;
+					if (!radios.get(message.chat.id).queue.length && !radios.get(message.chat.id).metadata.curSong) {
+						radios.get(message.chat.id).queue.push(res.items[0]);
+						message.reply("Preparing to play...");
+						bot.sendChatAction(message.chat.id, 'typing');
+						radios.get(message.chat.id).play();
+					} else {
+						radios.get(message.chat.id).queue.push(res.items[0]);
+						message.reply(`✔️ [${res.items[0].title}](https://youtu.be/${res.items[0].id}) has been added to queue.`)
+					}
+				}).catch(err => {
+					message.reply(`An error occured: ${err.toString()}`);
+				});
+			}
 			break;
 		case "pause":
 			if (!radios.has(message.chat.id)) return message.reply("You didn't created radio yet. Did you mean /new ?");
