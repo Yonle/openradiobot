@@ -36,22 +36,12 @@ server.on('request', (req, res) => {
 bot.on("message", message => {
 	message.reply = async (text) => {
 		if (!text || typeof text != "string") return Promise.resolve();
-		if (text.length > 4096) {
-			try {
-				await bot.sendMessage(message.chat.id, text.slice(0, 4096), { parse_mode: "Markdown" });
-				return await message.reply(text.slice(4096));
-			} catch (error) {
-				message.reply("An error occured: " + error.toString());
-			}
-		} else {
-			if (!text.length) return Promise.resolve();
-			try {
-				await bot.sendMessage(message.chat.id, text, { parse_mode: "Markdown" });
-				return Promise.resolve();
-			} catch (error) {
-				message.reply("An error occured: " + error.toString());
-			}
-		}
+		try {
+                        await bot.sendMessage(message.chat.id, text.slice(0, 4096), { parse_mode: "Markdown" });
+                        return await message.reply(text.slice(4096));
+                } catch (error) {
+                        message.reply("An error occured: " + error.toString());
+                }
 	};
 	message.chat.id = message.chat.id.toString();
 	if (!message.text || !message.text.startsWith("/")) return;
