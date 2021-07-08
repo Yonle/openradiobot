@@ -156,11 +156,11 @@ bot.on("message", message => {
 				let args = message.text.split(" ").slice(2)[0];
 				let to = message.text.split(" ").slice(3)[0];
 				if (!args || !to) return message.reply("Usage: `/queue move [Order number] [To Order number]`");
-				if (!radios.get(message.chat.id).queue[Number(args)-1] || !radios.get(message.chat.id).queue[Nunber(to)-1]) return message.reply("Song not found or invalid value.");
+				if (!radios.get(message.chat.id).queue[Number(args)-1] || !radios.get(message.chat.id).queue[Number(to)-1]) return message.reply("Song not found or invalid value.");
 				let fromOrder = radios.get(message.chat.id).queue[Number(args)-1];
-				let toOrder = radios.get(message.chat.id).queue[Nunber(to)-1];
+				let toOrder = radios.get(message.chat.id).queue[Number(to)-1];
 				radios.get(message.chat.id).queue[Number(args)-1] = toOrder;
-				radios.get(message.chat.id).queue[Nunber(to)-1] = fromOrder;
+				radios.get(message.chat.id).queue[Number(to)-1] = fromOrder;
 				message.reply(`✔️${fromOrder.title} order moved to ${toOrder.title} order.`);
 			} else if (method === "shuffle" || method === "random") {
 				radios.get(message.chat.id).queue.sort(() => 0.5 - Math.random());
