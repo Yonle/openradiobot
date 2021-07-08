@@ -256,6 +256,7 @@ bot.on("message", message => {
 			})();
 			break;
 		default:
+			if (!message.text.startsWith("/start") || !message.text.startsWith("/help")) return;
 			(() => {
 				let text = "*OpenradioBot v0.0 Alpha*";
 				text += "\n\n__Radio Managing__";
