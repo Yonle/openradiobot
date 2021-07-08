@@ -85,7 +85,7 @@ bot.on("message", message => {
 					stream.on('info', (info) => {
 						bot.sendChatAction(message.chat.id, 'typing');
 						client.metadata.curSong = info;
-						client.metadata.curSong.title = `[${info.videoDetails.title}](https://youtu.be/${info.videoDetails.videoId})`;
+						//client.metadata.curSong.title = `[${info.videoDetails.title}](https://youtu.be/${info.videoDetails.videoId})`;
 						client.metadata.curSong.id = info.videoDetails.videoId;
 						client.player.play(stream).then(client.play);
 						if (client.metadata.autoplay) {
