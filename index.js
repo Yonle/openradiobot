@@ -54,7 +54,7 @@ bot.on("message", message => {
 		}
 	};
 	message.chat.id = message.chat.id.toString();
-	if (!message.text.startsWith("/")) return;
+	if (!message.text || !message.text.startsWith("/")) return;
 	switch (message.text.split(" ")[0].slice(1)) {
 		case "new": 
 			if (radios.has(message.chat.id)) return message.reply("You already created your radio. To manage it, Type /manage. To destroy it, Type /destroy");
