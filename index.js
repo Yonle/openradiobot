@@ -161,7 +161,7 @@ bot.on("message", message => {
 				let toOrder = radios.get(message.chat.id).queue[Number(to)-1];
 				radios.get(message.chat.id).queue[Number(args)-1] = toOrder;
 				radios.get(message.chat.id).queue[Number(to)-1] = fromOrder;
-				message.reply(`✔️${fromOrder.title} order moved to ${toOrder.title} order.`);
+				message.reply(`✔️*${fromOrder.title}* order moved to *${toOrder.title}* order.`);
 			} else if (method === "shuffle" || method === "random") {
 				radios.get(message.chat.id).queue.sort(() => 0.5 - Math.random());
 				message.reply("✔️Queue order has been sorted randomly.");
