@@ -91,7 +91,7 @@ bot.on("message", message => {
 						if (client.metadata.autoplay) {
 							client.queue.push(info.related_videos[0]);
 						}
-						message.reply(`▶️Now playing:  ${client.metadata.curSong.title}`)
+						message.reply(`▶️Now playing: [${client.metadata.curSong.videoDetails.title}](https://youtu.be/${client.metadata.curSong.id})`);
 					});
 
 					stream.on('error', err => message.reply(err.toString()));
