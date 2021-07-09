@@ -157,7 +157,7 @@ bot.on("message", message => {
 				text += `\nCreated Since: \`${ms(Date.now() - radio.metadata.starttime)}\``;
 				if (radio.metadata.curSong && !radio.metadata.curSong.isAttachment) text += 
 				`\nNow Playing: [${radio.metadata.curSong.title||radio.metadata.curSong.videoDetails.title}](${radio.metadata.curSong.url || radio.metadata.curSong.videoDetails.video_url})`;
-				if (radio.metadata.curSong && radio.metadata.curSong.isAttachment) text += "Now Playing: Voice/Audio Message";
+				if (radio.metadata.curSong && radio.metadata.curSong.isAttachment) text += "\nNow Playing: Voice/Audio Message";
 				text += `\nAutoplay Enabled?: \`${radio.metadata.autoplay ? "Yes" : "No"}\``;
 				text += `\nTotal Queue: \`${radio.queue.length}\``;
 				text += `\nLive on: [${process.env.SERVER_HOST||"http://localhost:3000"}/${message.chat.id}](http://localhost:3000/${message.chat.id})`;
