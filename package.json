@@ -6,10 +6,11 @@
   "author": "Yonle",
   "license": "MIT",
   "scripts": {
-  	"start": "node index.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "dotenv": "^10.0.0",
+    "miniget": "^4.2.1",
     "openradio": "^1.1.30-c",
     "slimbot": "^5.1.0",
     "ytdl-core": "^4.8.3",
