@@ -80,9 +80,7 @@ bot.on("message", message => {
 		case "new": 
 			if (radio) return message.reply("You already created your radio. To manage it, Type /manage. To destroy it, Type /destroy");
 			radios.set(message.chat.id, {
-				player: new openradio({
-					bitrate: 192
-				}).on('error', (err) => message.reply(err.toString())),
+				player: new openradio().on('error', (err) => message.reply(err.toString())),
 				queue: [],
 				metadata: {
 					listener: 0,
