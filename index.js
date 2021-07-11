@@ -331,7 +331,7 @@ bot.on("message", message => {
 		case "stop":
 			if (!radio) return message.reply("You didn't created radio yet. Did you mean /new ?");
 			if (!radio.player.stream) return message.reply("There's nothing playing. Glitched? Do /destroy");
-			radio.player.stream.end();
+			radio.player.stream.destroy();
 			radio.queue = [];
 			message.reply("⏹️Player Stopped");
 			break;
