@@ -11,7 +11,7 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "miniget": "^4.2.1",
-    "openradio": "^1.1.30-c",
+    "openradio": "^1.1.32",
     "slimbot": "^5.1.0",
     "ytdl-core": "^4.8.3",
     "ytpl": "^2.2.1",
