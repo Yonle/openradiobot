@@ -174,7 +174,7 @@ bot.on("message", message => {
 					if (song.isAttachment) {
 						text += `\n${songNum}. Voice/Audio Message`;
 					} else {
-						text += `\n${songNum}. [${song.title||song.videoDetails.title}](https://youtu.be/${song.id||song.videoDetails ? song.videoDetails.videoId : null||song.isAttachment ? 'https://t.me/' + song.id + '/' + song.messageID : song.url})`;
+						text += `\n${songNum}. [${song.title}](https://youtu.be/${song.id||song.videoDetails ? song.videoDetails.videoId : null||song.isAttachment ? 'https://t.me/' + song.id + '/' + song.messageID : song.url})`;
 					}
 				});
 				text += "\n\n⚠️Some song is hidden due to a lot of request value. We'll improve this soon.\n\nYou may also manage these queue. For more information, Do `/queue help`";
