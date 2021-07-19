@@ -218,12 +218,13 @@ bot.on("message", message => {
 		case "play":
 			if (!radio) return message.reply("You didn't created radio yet. Did you mean /new ?");
 			let str = message.text.split(" ").slice(1).join(" ");
-			let audio = message.reply_to_message ? message.reply_to_message.audio||message.reply_to_message.voice : null;
+			let audio = message.reply_to_message ? message.reply_to_message.audio||message.reply_to_message.voice||message.reply_to_message.document : null;
 			if (!str.length && !audio) return message.reply("Usage: `/play [Song name|URL|Reply to Audio/Voice Message]`");
 			if (str) message.reply(`Searching \`${str}\`...`);
 			bot.sendChatAction(message.chat.id, 'typing');
 
 			if (audio) {
+				if (audio.type && !audio.type.startsWith("audio")) return message.reply("Unsupported Formats");
 				let id = audio.file_id;
 				bot.getFile(id).then(({ result }) => {
 					let newQueue = {
