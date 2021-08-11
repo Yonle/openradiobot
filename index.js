@@ -22,14 +22,14 @@ server.on('request', (req, res) => {
 		res.writeHead(400);
 		res.end("Invalid Request");
 	} else {
+		let id = Math.random();
 		res.setHeader("content-type", "audio/mp3");
-		radios.get(id).player.pipe(res);
-		radios.get(id).metadata.listener++;
+		radios.get(id).metadata.listener.set(id, res);
 		radios.get(id).metadata.totalListener++;
 
 		req.on('close', () => {
 			if (!radios.get(id)) return;
-			radios.get(id).metadata.listener--;
+			radios.get(id).metadata.listener.delete(id);
 		});
 	}
 });
@@ -83,7 +83,7 @@ bot.on("message", message => {
 				player: new openradio().on('error', (err) => message.reply(err.toString())),
 				queue: [],
 				metadata: {
-					listener: 0,
+					listener: new Map(),
 					totalListener: 0,
 					starttime: Date.now(),
 					curSong: null,
@@ -137,6 +137,9 @@ bot.on("message", message => {
 					return true;
 				}
 			});
+			radios.get(message.chat.id).player.on('data', data => radios.get(message.chat.id).listener.forEach((res, id) => res.write(data, err => {
+					if (err) radios.get(message.chat.id).listener.delete(id);
+			})));
 			message.reply("✔️Radio Created");
 			break;
 		case "destroy": 
