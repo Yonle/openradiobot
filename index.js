@@ -22,14 +22,15 @@ server.on('request', (req, res) => {
 		res.writeHead(400);
 		res.end("Invalid Request");
 	} else {
-		let id = Math.random();
+		let ply = Math.random();
 		res.setHeader("content-type", "audio/mp3");
-		radios.get(id).metadata.listener.set(id, res);
+		console.log(radios.get(id));
+		radios.get(id).metadata.listener.set(ply, res);
 		radios.get(id).metadata.totalListener++;
 
 		req.on('close', () => {
 			if (!radios.get(id)) return;
-			radios.get(id).metadata.listener.delete(id);
+			radios.get(id).metadata.listener.delete(ply);
 		});
 	}
 });
