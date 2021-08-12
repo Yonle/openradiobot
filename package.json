@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "dotenv": "^10.0.0",
-    "ffmpeg-static": "^4.4.0",
     "miniget": "^4.2.1",
     "ms": "^2.1.3",
     "openradio": "^1.1.33",
