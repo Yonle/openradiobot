@@ -24,7 +24,6 @@ server.on('request', (req, res) => {
 	} else {
 		let ply = Math.random();
 		res.setHeader("content-type", "audio/mp3");
-		console.log(radios.get(id));
 		radios.get(id).metadata.listener.set(ply, res);
 		radios.get(id).metadata.totalListener++;
 
@@ -368,7 +367,7 @@ bot.on("message", message => {
 			})();
 			break;
 		default:
-			if (!message.text.startsWith("/start") || !message.text.startsWith("/help")) return;
+			//if (!message.text.startsWith("/start") || !message.text.startsWith("/help")) return;
 			(() => {
 				let text = "*OpenradioBot v0.0 Alpha*";
 				text += "\n\n__Radio Managing__";
