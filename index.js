@@ -138,7 +138,7 @@ bot.on("message", message => {
 				}
 			});
 			radios.get(message.chat.id).player.on('data', data => radios.get(message.chat.id).metadata.listener.forEach((res, id) => res.write(data, err => {
-					if (err) radios.get(message.chat.id).listener.delete(id);
+					if (err) radios.get(message.chat.id).metadata.listener.delete(id);
 			})));
 			message.reply("✔️Radio Created");
 			break;
