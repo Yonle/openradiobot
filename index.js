@@ -153,7 +153,7 @@ bot.on("message", message => {
 			if (!radio) return message.reply("You didn't created radio yet. Did you mean /new ?");
 			(() => {
 				let text = "*Your radio status*";
-				text += `\nListener: \`${radio.metadata.listener}\``;
+				text += `\nListener: \`${radio.metadata.listener.size}\``;
 				text += `\nTotal Listener: \`${radio.metadata.totalListener}\``;
 				text += `\nLoop Type: \`${radio.metadata.loopType}\``;
 				text += `\nCreated Since: \`${ms(Date.now() - radio.metadata.starttime)}\``;
